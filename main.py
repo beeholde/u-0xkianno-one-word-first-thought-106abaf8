@@ -27,6 +27,11 @@ def main():
     with open(path, "w", encoding="utf-8", newline="\n") as handle:
         handle.write(WORD)
     os.chmod(path, 0o644)
+    # Guard: the gate is exactly one word, so verify the bytes on disk
+    # before returning; a mismatch fails loudly instead of submitting
+    # a truncated or padded entry.
+    with open(path, "r", encoding="utf-8", newline="") as handle:
+        assert handle.read() == WORD
 
 
 if __name__ == "__main__":
